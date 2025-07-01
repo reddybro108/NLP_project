@@ -1,0 +1,47 @@
+{
+    "workbench.colorTheme": "Default High Contrast",
+    "python.analysis.addImport.exactMatchOnly": true,
+    "python.analysis.autoFormatStrings": true,
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.completeFunctionParens": true,
+    "tabnine.experimentalAutoImports": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    "files.autoSave": "afterDelay",
+    "editor.formatOnType": true,
+    "containers.containerClient": "com.microsoft.visualstudio.containers.docker",
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+    "git.autofetch": true,
+    "workbench.editor.enablePreview": false,
+    "mcp": {
+        "inputs": [
+            {
+                "type": "promptString",
+                "id": "github_token",
+                "description": "Enter your GitHub PAT",
+                "password": true
+            }
+        ],
+        "servers": {
+            "github": {
+                "type": "http",
+                "url": "https://api.githubcopilot.com/mcp/",
+                "command": "docker",
+                "args": [
+                    "run",
+                    "-i",
+                    "--rm",
+                    "-e",
+                    "GITHUB_PERSONAL_ACCESS_TOKEN=${input:github_token}",
+                    "ghcr.io/github/github-mcp-server"
+                ],
+                "env": {
+                    "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}"
+                }
+            }
+        }
+    }
+}
