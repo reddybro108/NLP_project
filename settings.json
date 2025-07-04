@@ -16,6 +16,8 @@
     "terminal.integrated.enableMultiLinePasteWarning": "never",
     "git.autofetch": true,
     "workbench.editor.enablePreview": false,
+
+    // === MCP Server Configuration ===
     "mcp": {
         "inputs": [
             {
