@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import FastAPI, APIRouter
 from pydantic import BaseModel
 import joblib
 import os
