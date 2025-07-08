@@ -4,8 +4,6 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import string
 
-import os
-
 nltk.download('stopwords')
 nltk.download('wordnet')
 

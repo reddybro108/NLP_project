@@ -11,7 +11,7 @@ def train_model(data_csv):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     vectorizer = TfidfVectorizer()
     X_train_vec = vectorizer.fit_transform(X_train)
-    model = LogisticRegression()
+    model = LogisticRegression(max_iter=1000)
     model.fit(X_train_vec, y_train)
     joblib.dump(model, 'sentiment_model.joblib')
     joblib.dump(vectorizer, 'vectorizer.joblib')
