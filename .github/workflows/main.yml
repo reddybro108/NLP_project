@@ -70,9 +70,8 @@ jobs:
         push: true
         tags: ${{ env.IMAGE_NAME }}:latest
 
-    - name: 📝 Output Image Digest
-      run: echo "Image Digest: ${{ steps.docker_build.outputs.digest }}"
-
+    # - name: 📝 Output Image Digest
+    #   run: echo "Image Digest: ${{ steps.docker_build.outputs.digest }}"
 # Optional: notify on success or failure
 #   - name: 📣 Slack Notification
 #     if: always()
