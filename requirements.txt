@@ -1,8 +1,5 @@
-FastAPI
+fastapi
 uvicorn
-pydantic
-sqlalchemy
-python-dotenv
 pandas
 scikit-learn
 nltk

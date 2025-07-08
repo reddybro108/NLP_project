@@ -23,7 +23,7 @@
             {
                 "type": "promptString",
                 "id": "github_token",
-                "description": "Enter your GitHub PAT",
+                "description": "Enter your GitHub Personal Access Token (PAT)",
                 "password": true
             }
         ],
@@ -36,9 +36,10 @@
                     "run",
                     "-i",
                     "--rm",
-                    "-e",
-                    "GITHUB_PERSONAL_ACCESS_TOKEN=${input:github_token}",
-                    "ghcr.io/github/github-mcp-server"
+                    "-e", "GITHUB_PERSONAL_ACCESS_TOKEN=${input:github_token}",
+                    // Optional: mount local workspace to container if needed
+                    // "-v", "${workspaceFolder}:/workspace",
+                    "ghcr.io/github/github-mcp-server:latest"
                 ],
                 "env": {
                     "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}"
