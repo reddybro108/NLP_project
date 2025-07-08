@@ -1,4 +1,4 @@
-name: FastAPI CI/CD
+name: FastAPI CI/CD Pipeline
 
 on:
   push:
@@ -6,12 +6,15 @@ on:
   pull_request:
     branches: [main, master]
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+env:
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/fastapi-sentiment-app
 
+jobs:
+  build-test-lint:
+    runs-on: ubuntu-latest
     steps:
-    - name: ⬇️ Checkout Code
+
+    - name: ⬇️ Checkout Repository
       uses: actions/checkout@v3
 
     - name: 🐍 Set up Python
@@ -19,15 +22,36 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: 💾 Cache pip
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
     - name: 📦 Install Dependencies
       run: |
-        python -m pip install --upgrade pip
+        pip install --upgrade pip
         pip install -r requirements.txt
+        pip install flake8
 
-    - name: ✅ Run Tests (Optional)
+    - name: 🧪 Run Linter (flake8)
       run: |
-        echo "No tests defined. Add pytest or unit tests here."
-        # pytest tests/  # Uncomment if you have tests
+        flake8 . --exclude=venv --max-line-length=120
+
+    - name: ✅ Run Unit Tests
+      run: |
+        echo "No tests yet, define them under /tests"
+        # pytest tests/
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build-test-lint
+    steps:
+
+    - name: ⬇️ Checkout Repository
+      uses: actions/checkout@v3
 
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -39,8 +63,22 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: 🏗️ Build and Push Docker Image
+      id: docker_build
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/fastapi-sentiment-app:latest
+        tags: ${{ env.IMAGE_NAME }}:latest
+
+    - name: 📝 Output Image Digest
+      run: echo "Image Digest: ${{ steps.docker_build.outputs.digest }}"
+
+# Optional: notify on success or failure
+#   - name: 📣 Slack Notification
+#     if: always()
+#     uses: 8398a7/action-slack@v3
+#     with:
+#       status: ${{ job.status }}
+#       fields: repo,message,commit,author
+#     env:
+#       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
