@@ -11,16 +11,20 @@ VECTORIZER_PATH = "vectorizer.joblib"
 model = joblib.load(MODEL_PATH) if os.path.exists(MODEL_PATH) else None
 vectorizer = joblib.load(VECTORIZER_PATH) if os.path.exists(VECTORIZER_PATH) else None
 
+
 class TextIn(BaseModel):
     text: str
+
 
 @router.get("/")
 async def read_root():
     return {"message": "Welcome to the FastAPI application!"}
 
+
 @router.get("/items/{item_id}")
 async def read_item(item_id: int, q: str = None):
     return {"item_id": item_id, "query": q}
+
 
 @router.post("/predict")
 async def predict_sentiment(data: TextIn):
@@ -34,9 +38,11 @@ async def predict_sentiment(data: TextIn):
     score = float(max(proba))
     return {"sentiment": sentiment, "score": score}
 
+
 @router.get("/health")
 async def health_check():
     return {"status": "ok"}
+
 
 @router.post("/batch_predict")
 async def batch_predict(texts: list[TextIn]):
