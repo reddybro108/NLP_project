@@ -24,8 +24,8 @@ async def predict_sentiment(data: TextIn):
         return {"error": "Model or vectorizer not found. Train the model first."}
     text_vec = vectorizer.transform([data.text])
     prediction = model.predict(text_vec)[0]
-    # If prediction is a string, just return it
-    sentiment = prediction.capitalize()
+    sentiment_map = {0: "Negative", 1: "Neutral", 2: "Positive"}
+    sentiment = sentiment_map.get(int(prediction), "Unknown")
     proba = model.predict_proba(text_vec)[0]
     score = float(max(proba))
     return {"sentiment": sentiment, "score": score}
@@ -40,7 +40,8 @@ async def batch_predict(texts: list[TextIn]):
     for item in texts:
         text_vec = vectorizer.transform([item.text])
         prediction = model.predict(text_vec)[0]
-        sentiment = prediction.capitalize()
+        sentiment_map = {0: "Negative", 1: "Neutral", 2: "Positive"}
+        sentiment = sentiment_map.get(int(prediction), "Unknown")
         proba = model.predict_proba(text_vec)[0]
         score = float(max(proba))
         results.append({"text": item.text, "sentiment": sentiment, "score": score})
