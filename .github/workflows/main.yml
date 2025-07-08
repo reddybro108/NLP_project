@@ -42,3 +42,23 @@ jobs:
         context: .
         push: true
         tags: ${{ env.IMAGE_NAME }}:latest
+
+    - name: 📣 Notify Slack
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,job,took
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    - name: 📣 Notify Discord
+      if: always()
+      uses: Ilshidur/action-discord@v1
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        message: |
+          🚀 CI/CD Pipeline Result: **${{ job.status }}**
+          📦 Repo: ${{ github.repository }}
+          🧑‍💻 Committer: ${{ github.actor }}
+          🔗 Commit: ${{ github.event.head_commit.url }}
