@@ -1,9 +1,10 @@
+import os
+import joblib
+import logging
+from typing import List, Optional
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
-import joblib
-import os
-import logging
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -51,8 +52,11 @@ async def read_item(item_id: int, q: Optional[str] = None):
 async def predict_sentiment(data: TextIn):
     if not model or not vectorizer:
         logger.error("Model or vectorizer not found.")
-        raise HTTPException(status_code=503, detail="Model or vectorizer not found. Train the model first.")
-    
+        raise HTTPException(
+            status_code=503,
+            detail="Model or vectorizer not found. Train the model first."
+        )
+
     text_vec = vectorizer.transform([data.text])
     prediction = model.predict(text_vec)[0]
     sentiment_map = {0: "Negative", 1: "Neutral", 2: "Positive"}
@@ -72,8 +76,11 @@ async def health_check():
 async def batch_predict(batch_data: BatchPredictionIn):
     if not model or not vectorizer:
         logger.error("Model or vectorizer not found for batch prediction.")
-        raise HTTPException(status_code=503, detail="Model or vectorizer not found. Train the model first.")
-    
+        raise HTTPException(
+            status_code=503,
+            detail="Model or vectorizer not found. Train the model first."
+        )
+
     results = []
     sentiment_map = {0: "Negative", 1: "Neutral", 2: "Positive"}
 
@@ -83,6 +90,10 @@ async def batch_predict(batch_data: BatchPredictionIn):
         sentiment = sentiment_map.get(int(prediction), "Unknown")
         proba = model.predict_proba(text_vec)[0]
         score = float(max(proba))
-        results.append({"text": item.text, "sentiment": sentiment, "score": score})
+        results.append({
+            "text": item.text,
+            "sentiment": sentiment,
+            "score": score
+        })
 
     return results
