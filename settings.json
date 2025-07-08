@@ -16,8 +16,6 @@
     "terminal.integrated.enableMultiLinePasteWarning": "never",
     "git.autofetch": true,
     "workbench.editor.enablePreview": false,
-
-    // === MCP Server Configuration ===
     "mcp": {
         "inputs": [
             {
@@ -36,9 +34,8 @@
                     "run",
                     "-i",
                     "--rm",
-                    "-e", "GITHUB_PERSONAL_ACCESS_TOKEN=${input:github_token}",
-                    // Optional: mount local workspace to container if needed
-                    // "-v", "${workspaceFolder}:/workspace",
+                    "-e",
+                    "GITHUB_PERSONAL_ACCESS_TOKEN=${input:github_token}",
                     "ghcr.io/github/github-mcp-server:latest"
                 ],
                 "env": {
